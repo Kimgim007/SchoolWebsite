@@ -1,0 +1,76 @@
+﻿@using MyFirstProject.Models
+@model StudentViewModel
+
+<style>
+	.wide {
+		width: 190px;
+	}
+</style>
+
+<div style="width:100%;margin-top:75px;margin-left:170px;">
+
+	<div style="width:100%;">
+
+		<div>
+			@if (@Model.id == 0)
+			{
+				<h2>
+					Добавить студента
+				</h2>
+			}
+			else
+			{
+				<h2>
+					Обновить студента
+				</h2>
+			}
+		</div>
+
+		<form action="/Students/AddStudent" method="post">
+			<div>
+				<p>
+					<div>
+						Введите имя:
+					</div>
+					@Html.TextBoxFor(x => x.Name)
+					@Html.ValidationMessageFor(x=>x.Name)
+				</p>
+				<p>
+					@if(@Model.id == 0)
+					{
+					<div>
+						Введите дату рожденья:
+					</div>
+
+					@Html.TextBoxFor(model => model.Birthday, new { @type="date", @class = "wide",  @Value = Model.Birthday.ToString("yyyy-MM-dd") } )
+					@Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+					}
+					else
+					{
+					<div>
+						Введите дату рожденья:
+					</div>
+					@Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "date",@Value = Model.Birthday.ToString("yyyy-MM-dd")  }})
+					@Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+					}
+
+				</p>
+				<p>
+					<div>
+						Введите пол:
+					</div>
+
+					@Html.DropDownListFor(model => model.GenderId, Model.Genders)
+
+					@Html.HiddenFor(x=>x.id)
+				</p>
+			</div>
+
+			<div>
+				<input type="submit" value="Добавить " />
+			</div>
+		</form>
+	</div>
+
+</div>
+

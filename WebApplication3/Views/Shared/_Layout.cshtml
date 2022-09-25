@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>WebApplication3</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" />
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="~/js/site.js"></script>
+</head>
+<body>
+	<style>
+
+		table, th, td {
+			border: 0px solid black;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;	
+		}
+	
+		body {
+			background-image: url('https://catherineasquithgallery.com/uploads/posts/2021-03/1614716978_99-p-fon-dlya-afishi-meropriyatii-126.png');
+			background-position: center center;
+			background-repeat: no-repeat;  
+			 background-attachment: fixed;     
+			 background-size: cover; 
+			/* background-color: #464646;*/
+		}
+
+		.menu-element{
+           color:black
+		}
+		
+	</style>
+	
+	<div style="margin:0px auto; width:60%">
+		<div style="float:left;margin:0; width:15%;">
+			<table>
+				<tr style="height:100px">
+					<th>
+						<a href="@Url.Action("Index", "Home")" class="menu-element">Главная страница</a>
+
+					</th>
+				</tr>
+				<tr style="height:100px">
+					<th>	
+						<a href="@Url.Action("Index", "Students")"class="menu-element">Студенты</a>	
+					</th>
+				</tr>
+				<tr style="height:100px">
+					<th>
+						<a href="@Url.Action("Index", "Teachers")" class="menu-element">Преподаватели</a>	
+					</th>
+				</tr>
+				<tr style="height:100px">
+					<th>
+						<a href="@Url.Action("Index", "Lectures")" class="menu-element">Лекции</a>
+					</th>
+				</tr>
+					<tr style="height:100px">
+					<th>
+						<a href="@Url.Action("Index", "Subject")" class="menu-element">Предметы</a>		
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div class="container" style="float:right; margin:0;width:85%">
+			@RenderBody()
+		</div>
+	</div>
+	@RenderSection("Scripts", required: false)
+</body>
+</html>

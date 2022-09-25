@@ -1,0 +1,125 @@
+﻿@using People.EntityAndService.Entity
+@model Student
+
+<style>
+	table.table2 {
+		border: 0px solid black;
+	}
+
+	table.table1 tr {
+		border: 1px solid black;
+	}
+
+	table.table1 td {
+		border: 0px solid black;
+	}
+
+	table.table1 th {
+		border: 0px solid black;
+	}
+
+	body {
+		background-image: url('https://kartinkin.net/uploads/posts/2021-01/1611242068_51-p-krasivii-fon-dlya-oblozhki-knigi-57.jpg');
+	}
+</style>
+
+<div style="width:100%;">
+	<div style="float:left;width:80%;">
+		<div>
+			<h1 style="text-align:center">
+				Ученик
+			</h1>
+			<div style="text-align:center;">
+				<img src="https://finestediting.com/blog/wp-content/uploads/2020/11/college-life.jpg" style="width:200px;height:200px;" />
+			</div>
+			<div>
+
+				<table style="width:55%;" class="table2">
+
+					<tr style="height:30px;">
+						<th>
+							Под именем
+						</th>
+
+						<td>
+							@Model.Name
+						</td>
+					</tr>
+
+					<tr style="height:30px;">
+						<th>
+							Пол
+						</th>
+						<td>
+
+							@Model.Gender
+
+						</td>
+						</tr">
+					<tr style="height:30px;">
+						<th>
+							Возраст
+						</th>
+
+						<td>
+							@Model.Age()
+						</td>
+
+					</tr>
+				</table>
+
+			</div>
+		</div>
+
+		<div>
+			<h4 style="text-align:center">
+				Научные работы
+			</h4>
+			<table style="width:30%;" class="table1">
+				@foreach (var item in Model.ScientificWork)
+				{
+					<tr>
+						<td>
+							@Html.ActionLink(@item.Title,"InfoForScientificWork","ScientificWorks",new{@id=@item.Id},new { @class = "menu-element" })
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+	</div>
+
+	<div style="float:right;width:20%;margin-top:60px;">
+		<table style="width:100%;" class="table1">
+			<tr>
+				<td>
+					<h6>
+						@Html.ActionLink("Добавить науную работу","AddScientificWork","ScientificWorks",new{@studentId=@Model.Id},new { @class = "menu-element" })
+					</h6>
+
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<h6>
+						@Html.ActionLink("Поставить оценку за лекцию ","AddGrade","Grades",new{@StudentId=@Model.Id},new { @class = "menu-element" })
+					</h6>
+
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<h6>
+						@Html.ActionLink("Обновить студента","AddStudent","Students",new{@id=@Model.Id},new { @class = "menu-element" })
+					</h6>
+
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+
+
+

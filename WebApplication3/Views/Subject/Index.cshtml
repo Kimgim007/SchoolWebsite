@@ -1,0 +1,59 @@
+﻿@using MyFirstProject.Models
+@using People.EntityAndService.Entity
+@model List<Subject>
+
+
+<style>
+	table.table1 {
+		border: 0px solid black;
+	}
+
+		table.table1 tr {
+			border: 1px solid black;
+		}
+
+		table.table1 td {
+			border: 0px solid black;
+		}
+
+		table.table1 th {
+			border: 0px solid black;
+		}
+
+	body {
+		background-image: url('https://kartinkin.net/uploads/posts/2021-01/1611242068_51-p-krasivii-fon-dlya-oblozhki-knigi-57.jpg');
+	}
+</style>
+
+
+<div style="width:100%;">
+
+	<div style="float:left;width:85%;">
+
+		<h1 style="text-align:center">
+			Предметы
+		</h1>
+
+		<table style="width:30%;" class="table1">
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td style="text-align:center">
+
+						@item.Title
+
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+
+	<div style="float:right;width:15%;">
+		<h4>
+
+			<a href="/Subject/AddSubject" style="color:black">Добавить премета</a>
+		</h4>
+	</div>
+</div>
+
+

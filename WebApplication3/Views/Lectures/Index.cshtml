@@ -1,0 +1,85 @@
+﻿@using People.EntityAndService.Entity
+@model List<Lecture>
+
+<style>
+	table.table1 {
+		border: 2px solid black;
+	}
+
+		table.table1 tr {
+			border: 1px solid black;
+		}
+
+		table.table1 td {
+			border: 1px solid black;
+		}
+
+		table.table1 th {
+			border: 1px solid black;
+		}
+
+	body {
+		background-image: url('https://phonoteka.org/uploads/posts/2022-02/1645105152_21-phonoteka-org-p-prikolnii-fon-dlya-fotoshopa-na-zadnii-pla-23.jpg');
+	}
+</style>
+
+
+<div style="width:100%;">
+
+	<div style="float:left;width:85%;">
+
+		<h1 style="text-align:center">
+			Лекции
+		</h1>
+
+		<table style="width:40%;" class="table1">
+			<tr>
+				<th>
+					Название предмета
+				</th>
+				<th>
+					Название лекции
+				</th>
+				<th>
+					Время лекции
+
+				</th>
+				<th>
+					Преподаватель
+				</th>
+			</tr>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@item.Subject
+					</td>
+					<td>
+						@Html.ActionLink(@item.itemName, "InfoForLecture", "Lectures",new{@id=@item.Id},new { @class = "menu-element" } )
+
+					</td>
+					<td>
+						@item.DateTime
+					</td>
+					<td>
+						@Html.ActionLink(@item.Teacher.Name, "InfoForTeacher", "Teachers",new{@id=@item.Teacher.Id},new { @class = "menu-element" } )
+
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+
+
+	<div style="float:right;width:15%;">
+		<div>
+			<h4>
+				<a href="@Url.Action("AddLecture","Lectures")" style="color:black;"> Добавить лекцию </a>
+			</h4>
+		</div>
+	</div>
+</div>
+
+
+
+

@@ -1,0 +1,25 @@
+﻿@using MyFirstProject.Models
+@model SubjectViewModel
+
+<div style="width:100%;margin-top:75px;margin-left:170px;">
+	<h4>
+		Добавить предмет
+	</h4>
+	<form action="/Subject/AddSubject" method="post">
+		<div>
+			<p>
+				<div>
+					Введите название предмета:
+				</div>
+
+				@Html.TextBoxFor(x => x.Title)
+				@Html.ValidationMessageFor(x=>x.Title)
+			</p>
+		</div>
+
+		<div>
+			<input type="submit" value="Добавить" />
+		</div>
+	</form>
+</div>
+

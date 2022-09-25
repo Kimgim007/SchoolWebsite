@@ -1,0 +1,91 @@
+﻿@using MyFirstProject.Models
+@model LecturesViewModel
+<style>
+	.wide {
+		width: 190px;
+	}
+</style>
+
+
+
+
+<div style="width:100%;margin-top:75px;margin-left:170px;">
+
+	<div>
+		@if (@Model.id == 0)
+		{
+			<h2>
+				Добавить Лекцию
+			</h2>
+		}
+		else
+		{
+			<h2>
+				Обновить Лекцию
+			</h2>
+		}
+	</div>
+
+	<form action="/Lectures/AddLecture" method="post">
+		<div>
+
+			<p>
+				<div>
+					Введите название лекции:
+				</div>
+				@Html.TextBoxFor(x => x.iteName)
+				@Html.ValidationMessageFor(x=>x.iteName)
+			</p>
+			<p>
+				@if (@Model.id == 0)
+				{
+					<div>
+						Введите дату и время проведения:
+					</div>
+
+					<div class="form-group">
+
+
+						@Html.TextBoxFor(model => model.dataTime, new { @type="datetime-local", @class = "wide",  @Value = Model.dataTime.ToString("yyyy-MM-dd") } )
+						@Html.ValidationMessageFor(model => model.dataTime, "", new { @class = "text-danger" })
+
+					</div>
+				}
+				else
+				{
+					<div>
+						Введите дату рожденья:
+					</div>
+					<div class="form-group">
+
+						@Html.EditorFor(model => model.dataTime, new { htmlAttributes = new { @class = "datetime", }})
+						@Html.ValidationMessageFor(model => model.dataTime, "", new { @class = "text-danger" })
+					</div>
+				}
+
+			</p>
+			<p>
+				<div>
+					Выберете Предмет:
+				</div>
+				@Html.DropDownListFor(model => model.SubjectId, Model.Subjects)
+			</p>
+
+			<p>
+				<div>
+					Выберете преподавателя:
+				</div>
+				@Html.DropDownListFor(model => model.TeacherId, Model.Teachers)
+			</p>
+			@Html.HiddenFor(x=>x.id)
+
+		</div>
+
+		<div>
+			<input type="submit" value="Добавить " />
+		</div>
+
+	</form>
+
+</div>
+

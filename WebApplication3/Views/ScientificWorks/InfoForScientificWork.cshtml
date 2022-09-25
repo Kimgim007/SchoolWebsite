@@ -1,0 +1,63 @@
+﻿@using People.EntityAndService.Entity
+@model ScientificWork
+
+<h2 style="text-align:center">
+	Научная работа
+</h2>
+
+<style>
+	table, th, td {
+		table.table1 {
+			margin-left: auto;
+			margin-right: auto;
+			background: gray;
+			border: 2px solid black;
+		}
+
+			table.table1 tr {
+				border: 2px solid black;
+			}
+
+			table.table1 td {
+				border: 2px solid black;
+			}
+			table.table1 th {
+				border: 2px solid black;
+			}
+
+body {
+  background-image: url('https://kartinkin.net/uploads/posts/2021-01/1611242068_51-p-krasivii-fon-dlya-oblozhki-knigi-57.jpg');
+}
+</style>
+
+<table style="width:60%;" class ="table1">
+	<tr>
+		<th>
+			Название
+		</th>
+		<th>
+			Название Предмета
+		</th>
+		<th>
+			Преподаватель
+		</th>
+		<th>
+			Студент
+		</th>
+	</tr>
+		<tr>
+			<td>
+				@Model.Title
+			</td>
+			<td>
+				@Model.Subject.Title
+			</td>
+			<td>
+				<a href="/Teachers/InfoForTeacher?id=@Model.Teacher.Id" style="color:black;"> @Model.Teacher.Name</a>
+			</td>
+			<td>
+				<a href="/Students/InfoForStudent?id=@Model.Student.Id" style="color:black;"> @Model.Student.Name</a>
+			</td>
+		</tr>
+
+</table>

@@ -1,0 +1,95 @@
+﻿@using People.EntityAndService.Entity
+@model Lecture
+
+<style>
+	table.table1 {
+		border: 2px solid black;
+	}
+
+		table.table1 tr {
+			border: 2px solid black;
+		}
+
+		table.table1 td {
+			border: 2px solid black;
+		}
+
+		table.table1 th {
+			border: 2px solid black;
+		}
+
+	table.table2 {
+		border: 0px solid black;
+	}
+
+	body {
+		background-image: url('https://kartinkin.net/uploads/posts/2021-01/1611242068_51-p-krasivii-fon-dlya-oblozhki-knigi-57.jpg');
+	}
+</style>
+
+<div style="width:100%;">
+	<div style="float:left;width:80%;">
+		<h1 style="text-align:center">
+			Лекция
+		</h1>
+
+		<p>
+
+		</p>
+
+		<h4 style="text-align:left;margin-left:135px;">
+			Название:	@Model.itemName
+		</h4>
+
+		<h4 style="text-align:left;margin-left:135px;">
+			Преподаватель:            @Html.ActionLink(@Model.Teacher.Name,"InfoForTeacher","Teachers",new{@id=@Model.Teacher.Id},new { @class = "menu-element" })
+		</h4>
+
+		<p>
+
+		</p>
+
+
+		<table style="width:60%;" class="table1">
+			<tr>
+
+				<th>
+					Студент
+				</th>
+				<th>
+					Оценка
+				</th>
+			</tr>
+
+
+			@foreach (var item in Model.Grades)
+			{
+				<tr>
+					<td>
+						@Html.ActionLink(@item.Student.Name,"InfoForStudent","Students",new{@id=@item.Student.Id},new { @class = "menu-element" })
+					</td>
+					<td>
+						@item.Value
+					</td>
+				</tr>
+			}
+
+		</table>
+	</div>
+
+	<div style="float:right;width:20%;margin-top:60px;">
+		<table style="width:100%;" class="table1">
+			<tr>
+				<td>
+					<h6>
+						@Html.ActionLink("Обновить лекцию","AddLecture","Lectures",new{@id=@Model.Id},new { @class = "menu-element" })
+					</h6>
+
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</div>
+
+

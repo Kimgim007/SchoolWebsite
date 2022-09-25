@@ -1,0 +1,55 @@
+﻿@using MyFirstProject.Models
+@model ScientificWorkViewModel
+
+
+
+<div style="width:100%;margin-top:75px;margin-left:170px;">
+
+	<div style="width:100%;">
+		<div>
+			@if (@Model.Id == 0)
+			{
+				<h2>
+					Добавить научную работу
+				</h2>
+			}
+			else
+			{
+				<h2>
+					Обновить научную работу
+				</h2>
+			}
+		</div>
+		<form action="/ScientificWorks/AddScientificWork" method="post">
+			<div>
+
+
+				<p>
+					<div>
+						Введите название:
+					</div>
+					@Html.TextBoxFor(x => x.Title)
+					@Html.ValidationMessageFor(x=>x.Title)
+				</p>
+				<p>
+					<div>
+						Выберете предмет:
+					</div>
+					@Html.DropDownListFor(model => model.SubjectId, Model.Subjects)
+				</p>
+				<p>
+					<div>
+						Выберете преподавателя:
+					</div>
+					@Html.DropDownListFor(model => model.TeacherId, Model.Teachers)
+				</p>
+				@Html.HiddenFor(x=>x.StudentId)
+			</div>
+
+			<div>
+				<input type="submit" value="Создать" />
+			</div>
+		</form>
+	</div>
+</div>
+

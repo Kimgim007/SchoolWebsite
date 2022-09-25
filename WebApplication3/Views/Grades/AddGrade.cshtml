@@ -1,0 +1,47 @@
+﻿@using MyFirstProject.Models
+@model GradeViewModel
+
+
+<div style="width:100%;margin-top:75px;margin-left:170px;">
+
+	<div style="width:100%;">
+	<div>
+		@if (@Model.Id == 0)
+		{
+			<h2>
+				Поставить Оценку
+			</h2>
+		}
+		else
+		{
+			<h2>
+				Обновить Оценку
+			</h2>
+		}
+	</div>
+		<form action="/Grades/AddGrade" method="post">
+			<div>
+				<p>
+					<div>
+						Лекция:
+					</div>
+					@Html.DropDownListFor(model => model.LectureId, Model.Lectures)
+				</p>
+				<p>
+					<div>
+						Оценка: 
+					</div>
+					@Html.TextBoxFor(x => x.Value)
+					@Html.ValidationMessageFor(x=>x.Value)
+				</p>
+				@Html.HiddenFor(x=>x.StudentId)
+			</div>
+
+			<div>
+				<input type="submit" value="Поставить" />
+			</div>
+		</form>
+	</div>
+</div>
+
+
