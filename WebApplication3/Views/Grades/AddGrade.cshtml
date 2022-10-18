@@ -21,12 +21,22 @@
 	</div>
 		<form action="/Grades/AddGrade" method="post">
 			<div>
-				<p>
+				@if(@Model.LectureId == 0 )
+				{
+						<p>
 					<div>
 						Лекция:
 					</div>
 					@Html.DropDownListFor(model => model.LectureId, Model.Lectures)
 				</p>
+				}
+				else
+				{
+						@Html.HiddenFor(x=>x.LectureId)
+				}
+				
+				
+				
 				<p>
 					<div>
 						Оценка: 
@@ -34,11 +44,24 @@
 					@Html.TextBoxFor(x => x.Value)
 					@Html.ValidationMessageFor(x=>x.Value)
 				</p>
+
+				
 				@Html.HiddenFor(x=>x.StudentId)
+				@Html.HiddenFor(x=>x.Id)
+			
+			
 			</div>
 
 			<div>
-				<input type="submit" value="Поставить" />
+				@if(@Model.Id == 0)
+				{
+					<input type="submit" value="Поставить" />
+				}
+				else
+				{
+					<input type="submit" value="Обновить" />
+				}
+				
 			</div>
 		</form>
 	</div>

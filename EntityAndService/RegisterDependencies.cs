@@ -11,13 +11,15 @@ namespace EntityAndService
     {
         public static void Register(IServiceCollection services)
         {
-            services.AddScoped<ScientificWorkRepository>(x => new ScientificWorkRepository());
-            services.AddScoped<LectureRepository>(x => new LectureRepository());
-            services.AddScoped<StudentRepository>(x => new StudentRepository());
-            services.AddScoped<TeacherRepository>(x=> new TeacherRepository());
+            People.Data.RegisterDependencies.Register(services);
 
-            services.AddScoped<GradeRepository>(x => new GradeRepository());
-            services.AddScoped<SubjectRepository>(x => new SubjectRepository());
+            services.AddScoped<ScientificWorkRepository>();
+            services.AddScoped<LectureRepository>();
+            services.AddScoped<StudentRepository>();
+            services.AddScoped<TeacherRepository>();
+
+            services.AddScoped<GradeRepository>();
+            services.AddScoped<SubjectRepository>();
         }
     }
 }

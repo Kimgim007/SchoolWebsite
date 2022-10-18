@@ -10,62 +10,63 @@ namespace People.Data.Repository
 {
     public class LectureRepository : IRepository<LectureDTO>
     {
+        private DataContext _DataContext;
+
+        public LectureRepository(DataContext DataContext)
+        {
+            this._DataContext = DataContext;
+        }
+
         public void Add(LectureDTO lecture)
         {
-            using (var Db = new DataContext())
-            {
-                Db.Lectures.Add(lecture);
-                Db.SaveChanges();
-            }
+
+            _DataContext.Lectures.Add(lecture);
+            _DataContext.SaveChanges();
+
         }
         public LectureDTO Get(int Id)
         {
-            using (var Db = new DataContext())
-            {
-                var lectrue = Db.Lectures.Include(_=>_.Teacher).Include(_=>_.Subject).Include(s => s.Grades.Select(t => t.Student)).FirstOrDefault(l => l.Id == Id);
-                //ПОДУМАТЬ!
-                //Проверить что должно возвращаться если лектуре null
-             
-                return lectrue;
 
-            }
+            var lectrue = _DataContext.Lectures.Include(_ => _.Teacher).Include(_ => _.Subject).Include(s => s.Grades.Select(t => t.Student)).FirstOrDefault(l => l.Id == Id);
+            //ПОДУМАТЬ!
+            //Проверить что должно возвращаться если лектуре null
+
+            return lectrue;
+
+
         }
         public List<LectureDTO> GetAll()
         {
-            using (var Db = new DataContext())
-            {
-                return Db.Lectures.Include(_ => _.Teacher).Include(_ => _.Subject).Include(s => s.Grades.Select(t => t.Student)).ToList();
-            }
+
+            return _DataContext.Lectures.Include(_ => _.Teacher).Include(_ => _.Subject).Include(s => s.Grades.Select(t => t.Student)).ToList();
+
         }
         public void Update(LectureDTO lecture)
         {
-            using (var Db = new DataContext())
-            {
-                var updateLecture = Db.Lectures.First(Lc => Lc.Id == lecture.Id);
-                updateLecture.Subject = lecture.Subject;
-                updateLecture.StartTime = lecture.StartTime;
-                updateLecture.itemName = lecture.itemName;
-                updateLecture.Teacher = (lecture).Teacher;
-                Db.SaveChanges();
-            }
+
+            var updateLecture = _DataContext.Lectures.First(Lc => Lc.Id == lecture.Id);
+            updateLecture.Subject = lecture.Subject;
+            updateLecture.StartTime = lecture.StartTime;
+            updateLecture.itemName = lecture.itemName;
+            updateLecture.Teacher = (lecture).Teacher;
+            _DataContext.SaveChanges();
+
         }
         public LectureDTO GetLastLecture()
         {
-            using (var Db = new DataContext())
-            {
-                var idLastLecture = Db.Lectures.Max(l => l.Id);
-                var lecture = Get(idLastLecture);
-                return lecture;
-            }
+
+            var idLastLecture = _DataContext.Lectures.Max(l => l.Id);
+            var lecture = Get(idLastLecture);
+            return lecture;
+
         }
         public DateTime GetLectureDatatime()
         {
-            using (var Db = new DataContext())
-            {
-                var dataTime = Db.Lectures.Max(L => L.StartTime);
-                return dataTime;
 
-            }
+            var dataTime = _DataContext.Lectures.Max(L => L.StartTime);
+            return dataTime;
+
+
         }
     }
 }

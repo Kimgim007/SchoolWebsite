@@ -6,70 +6,72 @@ using People.EfStuff.Db;
 using System.Data.Entity;
 namespace People.Data.Repository
 {
-    public class StudentRepository: IRepository<StudentDTO>
+    public class StudentRepository : IRepository<StudentDTO>
     {
+
+        private DataContext _DataContext;
+
+        public StudentRepository(DataContext DataContext)
+        {
+            this._DataContext = DataContext;
+        }
 
         public void Add(StudentDTO student)
         {
-            using (var Db = new DataContext())
-            {
-                Db.Students.Add((student));
-                Db.SaveChanges();
-            }
+
+            _DataContext.Students.Add((student));
+            _DataContext.SaveChanges();
+
         }
         public StudentDTO Get(int Id)
         {
-            using (var Db = new DataContext())
-            {
-                var student = Db.Students
-                    .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
-                    .Include(s => s.Grades.Select(t => t.Lecture.Subject))
-                    .Include(_ => _.ScientificWork.Select(t=>t.Teacher))
-                    .Include(_ => _.ScientificWork.Select(t => t.Student))
-                    .Include(_ => _.ScientificWork.Select(t => t.Subject))
-                    .FirstOrDefault(St => St.Id == Id);               
-                return (student);                         
-            }
+
+            var student = _DataContext.Students
+                .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
+                .Include(s => s.Grades.Select(t => t.Lecture.Subject))
+                .Include(_ => _.ScientificWork.Select(t => t.Teacher))
+                .Include(_ => _.ScientificWork.Select(t => t.Student))
+                .Include(_ => _.ScientificWork.Select(t => t.Subject))
+                .FirstOrDefault(St => St.Id == Id);
+            return (student);
+
         }
         public List<StudentDTO> GetAll()
         {
-            using (var Db = new DataContext())
-            {
-                return Db.Students
-                    .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
-                    .Include(s => s.Grades.Select(t => t.Lecture.Subject))
-                    .Include(_=>_.ScientificWork)
-                    .Include(_ => _.ScientificWork.Select(t => t.Teacher))
-                    .Include(_ => _.ScientificWork.Select(t => t.Student))
-                    .Include(_ => _.ScientificWork.Select(t => t.Subject)).ToList();
-            }
-        }    
+
+            return _DataContext.Students
+                .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
+                .Include(s => s.Grades.Select(t => t.Lecture.Subject))
+                .Include(_ => _.ScientificWork)
+                .Include(_ => _.ScientificWork.Select(t => t.Teacher))
+                .Include(_ => _.ScientificWork.Select(t => t.Student))
+                .Include(_ => _.ScientificWork.Select(t => t.Subject)).ToList();
+
+        }
         public void Update(StudentDTO student)
         {
-            using (var Db = new DataContext())
+
+            var updateStudent = _DataContext.Students.FirstOrDefault(St => St.Id == student.Id);
+            if (updateStudent != null)
             {
-                var updateStudent = Db.Students.FirstOrDefault(St => St.Id == student.Id);
-                if (updateStudent != null)
-                {
-                    updateStudent.Name = student.Name;
-                    updateStudent.Birthday = student.Birthday;
-                    updateStudent.Gender = student.Gender;       
-                    Db.SaveChanges();
-                }
+                updateStudent.Name = student.Name;
+                updateStudent.Birthday = student.Birthday;
+                updateStudent.Gender = student.Gender;
+                _DataContext.SaveChanges();
             }
+
         }
         public void RemoveStudent(int id)
         {
-            using (var Db = new DataContext())
-            {
-                var student = Db.Students.FirstOrDefault(St => St.Id == id);
-                if (student != null)
-                {
-                    Db.Students.Remove(student);
-                    Db.SaveChanges();
-                }
 
+            var student = _DataContext.Students.FirstOrDefault(St => St.Id == id);
+            if (student != null)
+            {
+                _DataContext.Students.Remove(student);
+                _DataContext.SaveChanges();
             }
+
+
         }
 
     }

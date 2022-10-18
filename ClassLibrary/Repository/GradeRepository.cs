@@ -11,42 +11,45 @@ namespace People.Data.Repository
 {
     public class GradeRepository : IRepository<GradeDTO>
     {
+        private DataContext _DataContext;
+
+        public GradeRepository(DataContext DataContext)
+        {
+            this._DataContext = DataContext;
+        }
+
         public void Add(GradeDTO grade)
         {
-            using (var Db = new DataContext())
-            {
-                Db.Grades.Add(grade);
-                Db.SaveChanges();
-            }
+
+            _DataContext.Grades.Add(grade);
+            _DataContext.SaveChanges();
+
         }
 
         public GradeDTO Get(int id)
         {
-            using(var Db = new DataContext())
-            {
-                var grede = Db.Grades.Include(G => G.Lecture).Include(g => g.Student).FirstOrDefault(g => g.Id == id);
-                return grede;
-            }
+
+            var grede = _DataContext.Grades.Include(G => G.Lecture).Include(g => g.Student).FirstOrDefault(g => g.Id == id);
+            return grede;
+
         }
 
         public List<GradeDTO> GetAll()
         {
-            using(var Db =new DataContext())
-            {
-                return Db.Grades.Include(G=>G.Lecture).Include(g=>g.Student).ToList();
-            }
+
+            return _DataContext.Grades.Include(G => G.Lecture).Include(g => g.Student).ToList();
+
         }
 
         public void Update(GradeDTO gradeDTO)
         {
-           using(var Db = new DataContext())
-            {
-                var Grade = Db.Grades.First(Gr => Gr.Id == gradeDTO.Id);
-                Grade.Value = gradeDTO.Value;
-                Grade.Student = gradeDTO.Student;
-                Grade.Lecture = gradeDTO.Lecture;
-                Db.SaveChanges();
-            }
+
+            var Grade = _DataContext.Grades.First(Gr => Gr.Id == gradeDTO.Id);
+            Grade.Value = gradeDTO.Value;
+            Grade.Student = gradeDTO.Student;
+            Grade.Lecture = gradeDTO.Lecture;
+            _DataContext.SaveChanges();
+
         }
     }
 }

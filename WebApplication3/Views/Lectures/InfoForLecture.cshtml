@@ -42,7 +42,7 @@
 		</h4>
 
 		<h4 style="text-align:left;margin-left:135px;">
-			Преподаватель:            @Html.ActionLink(@Model.Teacher.Name,"InfoForTeacher","Teachers",new{@id=@Model.Teacher.Id},new { @class = "menu-element" })
+			Преподаватель:     @Html.ActionLink(@Model.Teacher.Name,"InfoForTeacher","Teachers",new{@id=@Model.Teacher.Id},new { @class = "menu-element" })
 		</h4>
 
 		<p>
@@ -70,6 +70,9 @@
 					</td>
 					<td>
 						@item.Value
+					</td>
+					<td>
+						@Html.ActionLink("Обновить оценку","AddGrade","Grades",new{@id = item.ID},new { @class = "menu-element" })
 					</td>
 				</tr>
 			}

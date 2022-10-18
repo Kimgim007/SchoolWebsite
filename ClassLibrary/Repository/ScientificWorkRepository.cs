@@ -9,42 +9,46 @@ namespace People.Data.Repository
 {
     public class ScientificWorkRepository : IRepository<ScientificWorkDTO>
     {
+
+        private DataContext _DataContext;
+
+        public ScientificWorkRepository(DataContext DataContext)
+        {
+            this._DataContext = DataContext;
+        }
+
         public void Add(ScientificWorkDTO scientificWork)
         {
-            using (var Db = new DataContext())
-            {
-                Db.ScientificWorks.Add(scientificWork);
-                Db.SaveChanges();
-            }
+
+            _DataContext.ScientificWorks.Add(scientificWork);
+            _DataContext.SaveChanges();
+
         }
         public ScientificWorkDTO Get(int Id)
         {
-            using(var Db = new DataContext())
-            {
-                var ScientificWork = Db.ScientificWorks.Include(_=>_.Subject).Include(_=>_.Teacher).Include(_=>_.Student).FirstOrDefault(x => x.Id == Id);
-                return ScientificWork;
-            }
+
+            var ScientificWork = _DataContext.ScientificWorks.Include(_ => _.Subject).Include(_ => _.Teacher).Include(_ => _.Student).FirstOrDefault(x => x.Id == Id);
+            return ScientificWork;
+
         }
         public List<ScientificWorkDTO> GetAll()
         {
-            using(var Db = new DataContext())
-            {
-                return Db.ScientificWorks.Include(_ => _.Subject).Include(_ => _.Teacher).Include(_ => _.Student).ToList();
-            }
+
+            return _DataContext.ScientificWorks.Include(_ => _.Subject).Include(_ => _.Teacher).Include(_ => _.Student).ToList();
+
         }
 
         public void Update(ScientificWorkDTO obj)
         {
-            using(var Db = new DataContext())
-            {
-                var updateScientificWork = Db.ScientificWorks.First(_ => _.Id == obj.Id);
-                updateScientificWork.Title = obj.Title;
-                updateScientificWork.Subject = obj.Subject;
-                updateScientificWork.Student = obj.Student;
-                updateScientificWork.Teacher = obj.Teacher;
-                Db.SaveChanges();
-             
-            }
+
+            var updateScientificWork = _DataContext.ScientificWorks.First(_ => _.Id == obj.Id);
+            updateScientificWork.Title = obj.Title;
+            updateScientificWork.Subject = obj.Subject;
+            updateScientificWork.Student = obj.Student;
+            updateScientificWork.Teacher = obj.Teacher;
+            _DataContext.SaveChanges();
+
+
         }
     }
 }

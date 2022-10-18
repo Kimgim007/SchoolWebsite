@@ -45,10 +45,11 @@ namespace WebApplication3.Controllers
                     Id = id,
                     Value = grade.Value,
                     Lectures = lectures.ToList(),
-                    StudentId = StudentId
+                    StudentId = StudentId,
+                    LectureId = grade.Lecture.Id
                 };
             }
-          
+
             return View(gradeViewModel);
         }
         [HttpPost]
@@ -69,8 +70,15 @@ namespace WebApplication3.Controllers
                 grade.ID = gradeViewModel.Id;
                 _gradeSevice.Update(grade);
             }
-            
-            return RedirectToAction("InfoForStudent", "Students", new { id = student.Id });
+
+            if (gradeViewModel.Id == 0)
+            {
+                return RedirectToAction("InfoForStudent", "Students", new { id = student.Id });
+            }
+            else
+            {
+                return RedirectToAction("InfoForLecture", "Lectures", new { id = gradeViewModel.LectureId });
+            }
         }
 
     }
