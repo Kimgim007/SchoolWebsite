@@ -4,30 +4,31 @@ using MyFirstProject.Models;
 using People.EntityAndService.Entity;
 using People.EntityAndService.Service;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyFirstProject.Controllers
 {
     public class TeachersController : Controller
     {
-        private TeacherService _service;
-        public TeachersController(TeacherService teacherService)
+        private ITeacherService _service;
+        public TeachersController(ITeacherService teacherService)
         {
             _service = teacherService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
            
-            var teacher = _service.GetTeachers();
+            var teacher = await _service.GetTeachers();
             return View(teacher);
         }
-        public IActionResult InfoForTeacher(int id )
+        public async Task<IActionResult> InfoForTeacher(int id )
         {
            
-            var teacher = _service.GetTeacher(id);
+            var teacher = await _service.GetTeacher(id);
             return View(teacher);
         }
         [HttpGet]
-        public IActionResult AddTeacher(int id)
+        public async Task<IActionResult> AddTeacher(int id)
         {
             TeacherViewModel teacherViewModel;
 
@@ -38,7 +39,7 @@ namespace MyFirstProject.Controllers
             }
             else
             {
-                var teacher =_service.GetTeacher(id);
+                var teacher = await _service.GetTeacher(id);
                 teacherViewModel = new TeacherViewModel()
                 {
                     id = id,
@@ -58,17 +59,17 @@ namespace MyFirstProject.Controllers
             return View(teacherViewModel);
         }
         [HttpPost]
-        public IActionResult AddTeacher(TeacherViewModel teachersViewController)
+        public async Task<IActionResult> AddTeacher(TeacherViewModel teachersViewController)
         {
             Teacher teacher = new Teacher(teachersViewController.Name, teachersViewController.Birthday, teachersViewController.GenderId, teachersViewController.ZP);
             if (teachersViewController.id == 0)
             {
-                _service.AddTeacher(teacher);
+                await _service.AddTeacher(teacher);
             }
             else
             {
                 teacher.Id = teachersViewController.id;
-                _service.UpdateTeacher(teacher);
+                await _service.UpdateTeacher(teacher);
             }
             return RedirectToAction("Index", "Teachers");
         }

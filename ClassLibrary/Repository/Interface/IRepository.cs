@@ -2,15 +2,16 @@
 
 using People.Data.DTO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace People.Data.Repository.Interface
 {
     interface IRepository<T> where T : ObjectDTO
     {
-         void Add(T obj);
-         T Get(int id);
-         List<T> GetAll();
-         void Update(T obj);
+         Task Add(T obj);
+         Task<T> Get(int id);
+         Task<List<T>> GetAll();
+         Task Update(T obj);
     
 
     }

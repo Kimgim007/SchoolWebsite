@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using People.Data.Repository.Interface;
+using System.Threading.Tasks;
 
 namespace People.Data.Repository
 {
@@ -17,37 +18,40 @@ namespace People.Data.Repository
             this._DataContext = DataContext;
         }
 
-        public void Add(ScientificWorkDTO scientificWork)
+        public async Task Add(ScientificWorkDTO scientificWork)
         {
 
             _DataContext.ScientificWorks.Add(scientificWork);
-            _DataContext.SaveChanges();
+            await _DataContext.SaveChangesAsync();
 
         }
-        public ScientificWorkDTO Get(int Id)
+        public async Task<ScientificWorkDTO> Get(int Id)
         {
 
-            var ScientificWork = _DataContext.ScientificWorks.Include(_ => _.Subject).Include(_ => _.Teacher).Include(_ => _.Student).FirstOrDefault(x => x.Id == Id);
+            var ScientificWork = await _DataContext.ScientificWorks
+                .Include(_ => _.Subject)
+                .Include(_ => _.Teacher)
+                .Include(_ => _.Student)
+                .FirstOrDefaultAsync(x => x.Id == Id);
             return ScientificWork;
 
         }
-        public List<ScientificWorkDTO> GetAll()
+        public async Task<List<ScientificWorkDTO>> GetAll()
         {
-
-            return _DataContext.ScientificWorks.Include(_ => _.Subject).Include(_ => _.Teacher).Include(_ => _.Student).ToList();
-
+            return await _DataContext.ScientificWorks
+                .Include(_ => _.Subject)
+                .Include(_ => _.Teacher)
+                .Include(_ => _.Student).ToListAsync();
         }
 
-        public void Update(ScientificWorkDTO obj)
+        public async Task Update(ScientificWorkDTO obj)
         {
-
-            var updateScientificWork = _DataContext.ScientificWorks.First(_ => _.Id == obj.Id);
+            var updateScientificWork = await _DataContext.ScientificWorks.FirstAsync(_ => _.Id == obj.Id);
             updateScientificWork.Title = obj.Title;
             updateScientificWork.Subject = obj.Subject;
             updateScientificWork.Student = obj.Student;
             updateScientificWork.Teacher = obj.Teacher;
-            _DataContext.SaveChanges();
-
+            await _DataContext.SaveChangesAsync();
 
         }
     }

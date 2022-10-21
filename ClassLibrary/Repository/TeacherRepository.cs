@@ -4,6 +4,8 @@ using People.Data.DTO;
 using People.Data.Repository.Interface;
 using People.EfStuff.Db;
 using System.Data.Entity;
+using System.Threading.Tasks;
+
 namespace People.Data.Repository
 {
     public class TeacherRepository : IRepository<TeacherDTO>
@@ -16,45 +18,39 @@ namespace People.Data.Repository
             this._DataContext = DataContext;
         }
 
-        public void Add(TeacherDTO teacher)
+        public async Task Add(TeacherDTO teacher)
         {
             _DataContext.Teachers.Add((teacher));
-            _DataContext.SaveChanges();
-
+            await _DataContext.SaveChangesAsync();
         }
-        public TeacherDTO Get(int id)
+        public async Task<TeacherDTO> Get(int id)
         {
-
-            var teacher = _DataContext.Teachers
+            var teacher = await _DataContext.Teachers
                 .Include(_ => _.ScientificWorks.Select(t => t.Teacher))
                 .Include(_ => _.ScientificWorks.Select(t => t.Student))
                 .Include(_ => _.ScientificWorks.Select(t => t.Subject))
-                .FirstOrDefault(th => th.Id == id);
+                .FirstOrDefaultAsync(th => th.Id == id);
             return teacher;
-
         }
-        public List<TeacherDTO> GetAll()
+        public async Task<List<TeacherDTO>> GetAll()
         {
-
-            return _DataContext.Teachers
+            return await _DataContext.Teachers
                 .Include(_ => _.ScientificWorks.Select(t => t.Teacher))
                 .Include(_ => _.ScientificWorks.Select(t => t.Student))
-                .Include(_ => _.ScientificWorks.Select(t => t.Subject)).ToList();
-
+                .Include(_ => _.ScientificWorks.Select(t => t.Subject)).ToListAsync();
         }
-        public void Update(TeacherDTO teacher)
+        public async Task Update(TeacherDTO teacher)
         {
-
-            var updateTeacher = _DataContext.Teachers.FirstOrDefault(th => th.Id == teacher.Id);
+            var updateTeacher = await _DataContext.Teachers.FirstOrDefaultAsync(th => th.Id == teacher.Id);
             if (updateTeacher != null)
             {
                 updateTeacher.Name = teacher.Name;
                 updateTeacher.Birthday = teacher.Birthday;
                 updateTeacher.Gender = teacher.Gender;
                 updateTeacher.ZP = teacher.ZP;
-                _DataContext.SaveChanges();
+                await _DataContext.SaveChangesAsync();
             }
-
         }
+
     }
 }

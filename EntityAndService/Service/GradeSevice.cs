@@ -3,32 +3,34 @@ using People.EntityAndService.Entity;
 using People.EntityAndService.Service.Maping;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace People.EntityAndService.Service
 {
-    public class GradeSevice
+    public class GradeSevice : IGradeSevice
     {
         private GradeRepository repository { get; set; }
         public GradeSevice(GradeRepository gradeRepository)
         {
             this.repository = gradeRepository;
         }
-   
-        public void AddGrade(Grade grade)
+
+        public async Task AddGrade(Grade grade)
         {
-            this.repository.Add(MapingService.map(grade, true));
+            await this.repository.Add(MapingService.map(grade, true));
         }
-        public Grade Get(int id)
+        public async Task<Grade> Get(int id)
         {
-            return MapingService.map(this.repository.Get(id),false);
+            return MapingService.map(await this.repository.Get(id), false);
         }
-        public List<Grade> GetAll()
+        public async Task<List<Grade>> GetAll()
         {
-            return this.repository.GetAll().Select(G=>MapingService.map(G,true)).ToList();
+            var grades = await this.repository.GetAll();
+            return grades.Select(G => MapingService.map(G, true)).ToList();
         }
-        public void Update(Grade grade)
+        public async Task Update(Grade grade)
         {
-           this.repository.Update(MapingService.map(grade,false));
+            await this.repository.Update(MapingService.map(grade, false));
         }
 
     }

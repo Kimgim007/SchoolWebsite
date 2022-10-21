@@ -3,28 +3,30 @@ using People.EntityAndService.Entity;
 using People.EntityAndService.Service.Maping;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace People.EntityAndService.Service
 {
-    public class SubjectService
+    public class SubjectService : ISubjectService
     {
-        private SubjectRepository repository {get;set;}
-       
+        private SubjectRepository repository { get; set; }
+
         public SubjectService(SubjectRepository subjectRepository)
         {
             this.repository = subjectRepository;
         }
-        public void AddSubject(Subject title)
+        public async Task AddSubject(Subject title)
         {
-            this.repository.Add(MapingService.map(title));
+            await this.repository.Add(MapingService.map(title));
         }
-        public Subject GetSubject(int Id)
+        public async Task<Subject> GetSubject(int Id)
         {
-           return MapingService.map(repository.Get(Id));
+            return MapingService.map(await repository.Get(Id));
         }
-        public List<Subject> GetSubjects()
+        public async Task<List<Subject>> GetSubjects()
         {
-            return this.repository.GetAll().Select(MapingService.map).ToList();
+            var subjects = await this.repository.GetAll();
+            return subjects.Select(MapingService.map).ToList();
         }
     }
 }

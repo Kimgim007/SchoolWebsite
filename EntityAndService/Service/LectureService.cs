@@ -4,49 +4,53 @@ using People.EntityAndService.Service.Maping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace People.EntityAndService.Service
 {
-    public class LectureService
+    public class LectureService : ILectureService
     {
         private LectureRepository repository { get; set; }
         public LectureService(LectureRepository lectureRepository)
         {
             this.repository = lectureRepository;
         }
-        public DateTime GetMaxTimeLecture()
+
+        public async Task AddLecture(Lecture lecture)
         {
-            return this.repository.GetLectureDatatime();
+            await this.repository.Add(MapingService.map(lecture));
         }
-        public void AddLecture(Lecture lecture)
-        {
-            this.repository.Add(MapingService.map(lecture));
-        }
-        public void AddLectures(List<Lecture> lectures)
+        public async Task AddLectures(List<Lecture> lectures)
         {
             foreach (Lecture lecture in lectures)
             {
-                this.repository.Add(MapingService.map(lecture));
+                await this.repository.Add(MapingService.map(lecture));
             }
         }
-        public List<Lecture> GetLectures()
+        public async Task<Lecture> GetLecture(int id)
         {
+            return  MapingService.map(await this.repository.Get(id), true);
+        }
+        public async Task<List<Lecture>> GetLectures()
+        {
+            var lectures = await this.repository.GetAll();
+            return lectures.Select(L => MapingService.map(L, true)).ToList();
 
-            return this.repository.GetAll().Select(L => MapingService.map(L, true)).ToList();
+        }
+        public async Task UpdateLecture(Lecture lecture)
+        {
+            await this.repository.Update(MapingService.map(lecture));
+        }
 
-        }
-        public Lecture GetLecture(int id)
-        {
+        //public Lecture GetLastLecture()
+        //{
+        //    return MapingService.map(this.repository.GetLastLecture(), false);
+        //}
 
-            return MapingService.map(this.repository.Get(id), true);
-        }
-        public Lecture GetLastLecture()
-        {
-            return MapingService.map(this.repository.GetLastLecture(), false);
-        }
-        public void UpdateLecture(Lecture lecture)
-        {
-            this.repository.Update(MapingService.map(lecture));
-        }
+        //public DateTime GetMaxTimeLecture()
+        //{
+        //    return this.repository.GetLectureDatatime();
+        //}
+
     }
 }

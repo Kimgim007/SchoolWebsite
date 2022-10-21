@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using People.Data.DTO;
 using People.Data.Repository.Interface;
 using People.EfStuff.Db;
@@ -16,30 +18,43 @@ namespace People.Data.Repository
             this._DataContext = DataContext;
         }
 
-        public void Add(SubjectDTO subject)
+        public async Task Add(SubjectDTO subject)
         {
             
                 _DataContext.Subjects.Add((subject));
-                _DataContext.SaveChanges();
-            
+                await _DataContext.SaveChangesAsync();
+        
         }
-        public SubjectDTO Get(int Id)
+        public async Task<SubjectDTO> Get(int Id)
         {
            
-                var subject = _DataContext.Subjects.FirstOrDefault(Sb=>Sb.Id == Id);
+                var subject = await _DataContext.Subjects.FirstOrDefaultAsync(Sb=>Sb.Id == Id);
                 return (subject);       
                
         }
-        public List<SubjectDTO> GetAll()
+        public async Task<List<SubjectDTO>> GetAll()
         {
             
-                return _DataContext.Subjects.ToList();
+                return await _DataContext.Subjects.ToListAsync();
             
         }
-
-        public void Update(SubjectDTO obj)
+        public async Task Update(SubjectDTO subject)
         {
-            throw new System.NotImplementedException();
+            var subjectDTO = await _DataContext.Subjects.FirstOrDefaultAsync(s=>s.Id == subject.Id);
+            if (subjectDTO != null)
+            {
+                subjectDTO.Title = subject.Title;
+                await _DataContext.SaveChangesAsync();
+            }
+        }
+        public async Task Remove(int id)
+        {
+            var subject = await _DataContext.Subjects.FirstOrDefaultAsync(s=>s.Id == id);
+            if (subject != null)
+            {
+                _DataContext.Subjects.Remove(subject);
+                await _DataContext.SaveChangesAsync();
+            }
         }
     }
 }

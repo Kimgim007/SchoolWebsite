@@ -4,83 +4,86 @@ using MyFirstProject.Models;
 using People.EntityAndService.Entity;
 using People.EntityAndService.Service;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyFirstProject.Controllers
 {
     public class LecturesController : Controller
     {
-        private LectureService _lectureService;
-        private TeacherService _teacherService;
-        private SubjectService _subjectService;
-        public LecturesController(LectureService lectureService, TeacherService teacherService, SubjectService subjectService)
+        private ILectureService _lectureService;
+        private ITeacherService _teacherService;
+        private ISubjectService _subjectService;
+        public LecturesController(ILectureService lectureService, ITeacherService teacherService, ISubjectService subjectService)
         {
             _lectureService = lectureService;
             _teacherService = teacherService;
             _subjectService = subjectService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            var lectures = _lectureService.GetLectures();
+            var lectures = await _lectureService.GetLectures();
             return View(lectures);
         }
-        public IActionResult InfoForLecture(int id)
+        public async Task<IActionResult> InfoForLecture(int id)
         {
 
-            var lectures = _lectureService.GetLecture(id);
+            var lectures = await _lectureService.GetLecture(id);
             return View(lectures);
         }
         [HttpGet]
-        public IActionResult AddLecture(int id)
+        public async Task<IActionResult> AddLecture(int id)
         {
             LecturesViewModel LecturesViewModel;
 
 
-            var subjects = _subjectService.GetSubjects().Select(x => new SelectListItem() { Text = x.Title, Value = x.Id.ToString() });
-            var teachets = _teacherService.GetTeachers().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
+            var subjects = await _subjectService.GetSubjects();
+            var subjectsSort = subjects.Select(x => new SelectListItem() { Text = x.Title, Value = x.Id.ToString() });
+            var teachets = await _teacherService.GetTeachers();
+            var teachersSort = teachets.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
             if (id == 0)
             {
                 LecturesViewModel = new LecturesViewModel()
                 {
-                    Subjects = subjects.ToList(),
-                    Teachers = teachets.ToList()
+                    Subjects = subjectsSort.ToList(),
+                    Teachers = teachersSort.ToList()
                 };
             }
             else
             {
-                var lecture = _lectureService.GetLecture(id);
+                var lecture = await _lectureService.GetLecture(id);
                 LecturesViewModel = new LecturesViewModel()
                 {
                     id = lecture.Id,
-                   
-                    Subjects = subjects.ToList(),
+
+                    Subjects = subjectsSort.ToList(),
                     SubjectId = lecture.Subject.Id,
 
                     iteName = lecture.itemName,
                     dataTime = lecture.DateTime,
 
-                    Teachers = teachets.ToList(),
+                    Teachers = teachersSort.ToList(),
                     TeacherId = lecture.Teacher.Id,
                 };
             }
             return View(LecturesViewModel);
         }
         [HttpPost]
-        public IActionResult AddLecture(LecturesViewModel lecturesViewModel)
+        public async Task<IActionResult> AddLecture(LecturesViewModel lecturesViewModel)
         {
             Subject subject = new Subject() { Id = lecturesViewModel.SubjectId };
             Teacher teacher = new Teacher() { Id = lecturesViewModel.TeacherId };
 
             Lecture Lecture = new Lecture(subject, lecturesViewModel.dataTime, lecturesViewModel.iteName, teacher);
-           
-            if(lecturesViewModel.id == 0)
+
+            if (lecturesViewModel.id == 0)
             {
-                _lectureService.AddLecture(Lecture);
+                await _lectureService.AddLecture(Lecture);
             }
             else
             {
                 Lecture.Id = lecturesViewModel.id;
-                _lectureService.UpdateLecture(Lecture);
+                await _lectureService.UpdateLecture(Lecture);
             }
 
             return RedirectToAction("Index", "Lectures");

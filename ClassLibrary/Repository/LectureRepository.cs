@@ -5,6 +5,7 @@ using System.Linq;
 using People.Data.DTO;
 using People.EfStuff.Db;
 using People.Data.Repository.Interface;
+using System.Threading.Tasks;
 
 namespace People.Data.Repository
 {
@@ -17,56 +18,57 @@ namespace People.Data.Repository
             this._DataContext = DataContext;
         }
 
-        public void Add(LectureDTO lecture)
+        public async Task Add(LectureDTO lecture)
         {
 
             _DataContext.Lectures.Add(lecture);
-            _DataContext.SaveChanges();
+            await _DataContext.SaveChangesAsync();
 
         }
-        public LectureDTO Get(int Id)
+        public async Task<LectureDTO> Get(int Id)
         {
-
-            var lectrue = _DataContext.Lectures.Include(_ => _.Teacher).Include(_ => _.Subject).Include(s => s.Grades.Select(t => t.Student)).FirstOrDefault(l => l.Id == Id);
-            //ПОДУМАТЬ!
-            //Проверить что должно возвращаться если лектуре null
-
+            var lectrue = await _DataContext.Lectures
+                .Include(_ => _.Teacher)
+                .Include(_ => _.Subject)
+                .Include(s => s.Grades
+                .Select(t => t.Student))
+                .FirstOrDefaultAsync(l => l.Id == Id);
+           
             return lectrue;
 
+        }
+        public async Task<List<LectureDTO>> GetAll()
+        {
+            return await _DataContext.Lectures
+                .Include(_ => _.Teacher)
+                .Include(_ => _.Subject)
+                .Include(s => s.Grades.
+                Select(t => t.Student)).ToListAsync();
 
         }
-        public List<LectureDTO> GetAll()
+        public async Task Update(LectureDTO lecture)
         {
 
-            return _DataContext.Lectures.Include(_ => _.Teacher).Include(_ => _.Subject).Include(s => s.Grades.Select(t => t.Student)).ToList();
-
-        }
-        public void Update(LectureDTO lecture)
-        {
-
-            var updateLecture = _DataContext.Lectures.First(Lc => Lc.Id == lecture.Id);
+            var updateLecture = await _DataContext.Lectures.FirstOrDefaultAsync(Lc => Lc.Id == lecture.Id);
             updateLecture.Subject = lecture.Subject;
             updateLecture.StartTime = lecture.StartTime;
             updateLecture.itemName = lecture.itemName;
             updateLecture.Teacher = (lecture).Teacher;
-            _DataContext.SaveChanges();
+            await _DataContext.SaveChangesAsync();
 
         }
-        public LectureDTO GetLastLecture()
+        public async Task<LectureDTO> GetLastLecture()
         {
 
-            var idLastLecture = _DataContext.Lectures.Max(l => l.Id);
-            var lecture = Get(idLastLecture);
+            var idLastLecture = await _DataContext.Lectures.MaxAsync(l => l.Id);
+            var lecture = await Get(idLastLecture);
             return lecture;
 
         }
-        public DateTime GetLectureDatatime()
+        public async Task<DateTime> GetLectureDatatime()
         {
-
-            var dataTime = _DataContext.Lectures.Max(L => L.StartTime);
+            var dataTime = await _DataContext.Lectures.MaxAsync(L => L.StartTime);
             return dataTime;
-
-
         }
     }
 }

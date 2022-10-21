@@ -31,17 +31,17 @@ namespace WebApplication3
 
             services.AddControllersWithViews();
 
-            services.AddScoped<LectureService>();
+            services.AddScoped<ILectureService, LectureService>();
 
-            services.AddScoped<TeacherService>();
+            services.AddScoped<ITeacherService, TeacherService>();
 
-            services.AddScoped<StudentService>();
+            services.AddScoped<IStudentService, StudentService>();
 
-            services.AddScoped<ScientificWorkService>();
+            services.AddScoped<IScientificWorkService, ScientificWorkService>();
 
-            services.AddScoped<SubjectService>();
+            services.AddScoped<ISubjectService,SubjectService>();
 
-            services.AddScoped<GradeSevice>();
+            services.AddScoped<IGradeSevice,GradeSevice>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

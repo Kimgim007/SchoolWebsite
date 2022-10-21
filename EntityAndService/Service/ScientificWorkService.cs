@@ -3,31 +3,33 @@ using People.EntityAndService.Entity;
 using People.EntityAndService.Service.Maping;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace People.EntityAndService.Service
 {
-    public class ScientificWorkService
+    public class ScientificWorkService : IScientificWorkService
     {
         private ScientificWorkRepository repository { get; set; }
         public ScientificWorkService(ScientificWorkRepository scientificWorkRepository)
         {
             this.repository = scientificWorkRepository;
         }
-        public void AddScientificWork(ScientificWork scientificWork)
+        public async Task AddScientificWork(ScientificWork scientificWork)
         {
-            repository.Add(MapingService.map(scientificWork));
+            await repository.Add(MapingService.map(scientificWork));
         }
-        public List<ScientificWork> GetScientificWorks()
+        public async Task<List<ScientificWork>> GetScientificWorks()
         {
-            return repository.GetAll().Select(s=>MapingService.map(s,true)).ToList();
+            var scientificWorks = await repository.GetAll();
+            return scientificWorks.Select(s => MapingService.map(s, true)).ToList();
         }
-        public ScientificWork GetScientificWork(int id)
+        public async Task<ScientificWork> GetScientificWork(int id)
         {
-            return MapingService.map(this.repository.Get(id),true);
+            return MapingService.map(await this.repository.Get(id), true);
         }
-        public void Update(ScientificWork scientificWork)
+        public async Task Update(ScientificWork scientificWork)
         {
-            this.repository.Update(MapingService.map(scientificWork));
+            await this.repository.Update(MapingService.map(scientificWork));
         }
     }
 }

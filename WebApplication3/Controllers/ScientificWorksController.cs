@@ -6,52 +6,55 @@ using People.EntityAndService.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyFirstProject.Controllers
 {
     public class ScientificWorksController : Controller
     {
-        private ScientificWorkService _scientificWorkService;
-        private SubjectService _subjectService;
-        private TeacherService _teachers;
-        public ScientificWorksController(ScientificWorkService scientificWorkService, SubjectService subjectService, TeacherService teacherService)
+        private IScientificWorkService _scientificWorkService;
+        private ISubjectService _subjectService;
+        private ITeacherService _teachers;
+        public ScientificWorksController(IScientificWorkService scientificWorkService, ISubjectService subjectService, ITeacherService teacherService)
         {
             _scientificWorkService = scientificWorkService;
             _subjectService = subjectService;
             _teachers = teacherService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var ScientificWorks = _scientificWorkService.GetScientificWorks();
+            var ScientificWorks = await _scientificWorkService.GetScientificWorks();
             return View(ScientificWorks);
 
         }
-        public IActionResult InfoForScientificWork(int id)
+        public async Task<IActionResult> InfoForScientificWork(int id)
         {
-            var ScientificWork = _scientificWorkService.GetScientificWork(id);
+            var ScientificWork = await _scientificWorkService.GetScientificWork(id);
             return View(ScientificWork);
         }
 
         [HttpGet]
-        public IActionResult AddScientificWork(int studentId,int id)
+        public async Task<IActionResult> AddScientificWork(int studentId, int id)
         {
             ScientificWorkViewModel scientificWorkViewModel;
-            var subjects = _subjectService.GetSubjects().Select(x => new SelectListItem() { Text = x.Title, Value = x.Id.ToString() });
-            var teachets = _teachers.GetTeachers().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
-            if(id == 0)
+            var subjects = await _subjectService.GetSubjects();
+            var subjectsSort = subjects.Select(x => new SelectListItem() { Text = x.Title, Value = x.Id.ToString() });
+            var teachets = await _teachers.GetTeachers();
+            var teachetsSort = teachets.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
+            if (id == 0)
             {
-               
+
                 scientificWorkViewModel = new ScientificWorkViewModel()
                 {
-                    Subjects = subjects.ToList(),
+                    Subjects = subjectsSort.ToList(),
                     StudentId = studentId,
-                    Teachers = teachets.ToList()
+                    Teachers = teachetsSort.ToList()
                 };
             }
             else
             {
-                var scientificWork = _scientificWorkService.GetScientificWork(id);
+                var scientificWork = await _scientificWorkService.GetScientificWork(id);
                 scientificWorkViewModel = new ScientificWorkViewModel()
                 {
                     Id = scientificWork.Id,
@@ -65,7 +68,7 @@ namespace MyFirstProject.Controllers
             return View(scientificWorkViewModel);
         }
         [HttpPost]
-        public IActionResult AddScientificWork(ScientificWorkViewModel scintificWorkViewModel)
+        public async Task<IActionResult> AddScientificWork(ScientificWorkViewModel scintificWorkViewModel)
         {
             Subject subject = new Subject() { Id = scintificWorkViewModel.SubjectId };
             Teacher teacher = new Teacher() { Id = scintificWorkViewModel.TeacherId };
@@ -74,14 +77,14 @@ namespace MyFirstProject.Controllers
             ScientificWork scientificWork = new ScientificWork(scintificWorkViewModel.Title, subject, teacher, student);
             if (scintificWorkViewModel.Id == 0)
             {
-                _scientificWorkService.AddScientificWork(scientificWork);
+                await _scientificWorkService.AddScientificWork(scientificWork);
             }
             else
             {
                 scientificWork.Id = scintificWorkViewModel.Id;
-                _scientificWorkService.Update(scientificWork);
+                await _scientificWorkService.Update(scientificWork);
             }
-          
+
             return RedirectToAction("InfoForStudent", "Students", new { id = student.Id });
         }
     }

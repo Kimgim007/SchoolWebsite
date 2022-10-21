@@ -53,6 +53,7 @@ namespace People.EntityAndService.Service.Maping
                 ScientificWork = scientificWork
             };
         }
+
         public static TeacherDTO map(Teacher teacher)
         {
 
@@ -102,6 +103,7 @@ namespace People.EntityAndService.Service.Maping
             }
             return teacher1;
         }
+
         public static LectureDTO map(Lecture lecture)
         {
             return new LectureDTO()
@@ -137,6 +139,7 @@ namespace People.EntityAndService.Service.Maping
                 Id = lecture.Id
             };
         }
+
         public static GradeDTO map(Grade grade, bool getRefernce)
         {
             return new GradeDTO()
@@ -170,6 +173,7 @@ namespace People.EntityAndService.Service.Maping
                 ID = grade.Id
             };
         }
+
         public static SubjectDTO map(Subject subject)
         {
             return new SubjectDTO()
@@ -185,6 +189,7 @@ namespace People.EntityAndService.Service.Maping
                 Title = subject.Title
             };
         }
+
         public static ScientificWorkDTO map(ScientificWork scientificWork)
         {
             return new ScientificWorkDTO()

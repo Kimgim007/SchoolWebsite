@@ -2,19 +2,20 @@
 using MyFirstProject.Models;
 using People.EntityAndService.Entity;
 using People.EntityAndService.Service;
+using System.Threading.Tasks;
 
 namespace MyFirstProject.Controllers
 {
     public class SubjectController : Controller
     {
-        private SubjectService _subjectService;
-        public SubjectController (SubjectService subjectService)
+        private ISubjectService _subjectService;
+        public SubjectController (ISubjectService subjectService)
         {
             _subjectService = subjectService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var subjects = _subjectService.GetSubjects();
+            var subjects = await _subjectService.GetSubjects();
             return View(subjects);
         }
 
@@ -24,10 +25,10 @@ namespace MyFirstProject.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddSubject(SubjectViewModel subjectViewModel)
+        public async Task<IActionResult> AddSubject(SubjectViewModel subjectViewModel)
         {
             Subject subject = new Subject(subjectViewModel.Title);
-            _subjectService.AddSubject(subject);
+            await _subjectService.AddSubject(subject);
             return View();
         }
     }

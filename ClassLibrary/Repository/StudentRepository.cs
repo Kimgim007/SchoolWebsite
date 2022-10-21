@@ -4,6 +4,8 @@ using People.Data.DTO;
 using People.Data.Repository.Interface;
 using People.EfStuff.Db;
 using System.Data.Entity;
+using System.Threading.Tasks;
+
 namespace People.Data.Repository
 {
     public class StudentRepository : IRepository<StudentDTO>
@@ -16,63 +18,56 @@ namespace People.Data.Repository
             this._DataContext = DataContext;
         }
 
-        public void Add(StudentDTO student)
+        public async Task Add(StudentDTO student)
         {
 
-            _DataContext.Students.Add((student));
-            _DataContext.SaveChanges();
+             _DataContext.Students.Add((student));
+            await _DataContext.SaveChangesAsync();
 
         }
-        public StudentDTO Get(int Id)
+        public async Task<StudentDTO> Get(int Id)
         {
 
-            var student = _DataContext.Students
+            var student = await _DataContext.Students
                 .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
                 .Include(s => s.Grades.Select(t => t.Lecture.Subject))
                 .Include(_ => _.ScientificWork.Select(t => t.Teacher))
                 .Include(_ => _.ScientificWork.Select(t => t.Student))
                 .Include(_ => _.ScientificWork.Select(t => t.Subject))
-                .FirstOrDefault(St => St.Id == Id);
+                .FirstOrDefaultAsync(St => St.Id == Id);
             return (student);
 
         }
-        public List<StudentDTO> GetAll()
+        public async Task<List<StudentDTO>> GetAll()
         {
-
-            return _DataContext.Students
+            return await _DataContext.Students
                 .Include(s => s.Grades.Select(t => t.Lecture.Teacher))
                 .Include(s => s.Grades.Select(t => t.Lecture.Subject))
                 .Include(_ => _.ScientificWork)
                 .Include(_ => _.ScientificWork.Select(t => t.Teacher))
                 .Include(_ => _.ScientificWork.Select(t => t.Student))
-                .Include(_ => _.ScientificWork.Select(t => t.Subject)).ToList();
-
+                .Include(_ => _.ScientificWork.Select(t => t.Subject)).ToListAsync();
         }
-        public void Update(StudentDTO student)
+        public async Task Update(StudentDTO student)
         {
-
-            var updateStudent = _DataContext.Students.FirstOrDefault(St => St.Id == student.Id);
+            var updateStudent = await _DataContext.Students.FirstOrDefaultAsync(St => St.Id == student.Id);
             if (updateStudent != null)
             {
                 updateStudent.Name = student.Name;
                 updateStudent.Birthday = student.Birthday;
                 updateStudent.Gender = student.Gender;
-                _DataContext.SaveChanges();
+               await _DataContext.SaveChangesAsync();
             }
-
         }
-        public void RemoveStudent(int id)
+        public async Task RemoveStudent(int id)
         {
 
-            var student = _DataContext.Students.FirstOrDefault(St => St.Id == id);
+            var student = await _DataContext.Students.FirstOrDefaultAsync(St => St.Id == id);
             if (student != null)
             {
-                _DataContext.Students.Remove(student);
-                _DataContext.SaveChanges();
+                 _DataContext.Students.Remove(student);
+                await _DataContext.SaveChangesAsync();
             }
-
-
         }
-
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace People.EntityAndService.Entity
 {
     public class Student : Person
