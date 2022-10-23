@@ -17,8 +17,8 @@ namespace WebApplication3.Controllers
     {
 
         private ILectureService _lectureService;
-        private GradeSevice _gradeSevice;
-        public GradesController(ILectureService lectureService,GradeSevice gradeSevice)
+        private IGradeSevice _gradeSevice;
+        public GradesController(ILectureService lectureService,IGradeSevice gradeSevice)
         {
             _lectureService = lectureService;
             _gradeSevice = gradeSevice;
